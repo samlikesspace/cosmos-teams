@@ -1,84 +1,77 @@
 import { world, system } from "@minecraft/server";
 
-// --- CONFIGURATION ---
-const CHAT_COOLDOWN = 1500; 
-const lastChatTime = new Map();
+// Verify the API is loading
+console.warn("Moderation Mod Loading...");
 
-// Using beforeEvents allows us to cancel the message (important for commands and ranks)
-// If this still says undefined, double check that "Beta APIs" is ON in world settings.
-world.beforeEvents.chatSend.subscribe((event) => {
-    const sender = event.sender;
-    const message = event.message;
-    const now = Date.now();
+if (!world.beforeEvents) {
+    console.error("CRITICAL: Beta APIs are NOT enabled in World Settings!");
+} else {
+    const lastChatTime = new Map();
 
-    // 1. SPAM PROTECTION
-    if (lastChatTime.has(sender.id)) {
-        const diff = now - lastChatTime.get(sender.id);
-        if (diff < CHAT_COOLDOWN) {
+    world.beforeEvents.chatSend.subscribe((event) => {
+        const { sender, message } = event;
+        const now = Date.now();
+
+        // 1. Spam Protection (1.5s)
+        if (lastChatTime.has(sender.id)) {
+            const diff = now - lastChatTime.get(sender.id);
+            if (diff < 1500) {
+                event.cancel = true;
+                system.run(() => sender.sendMessage("§cDon't spam!"));
+                return;
+            }
+        }
+        lastChatTime.set(sender.id, now);
+
+        // 2. Command Check (.)
+        if (message.startsWith(".")) {
             event.cancel = true;
-            // Use system.run to send messages from within a 'before' event
-            system.run(() => {
-                sender.sendMessage("§cPlease don't spam!");
-            });
+            const args = message.slice(1).split(" ");
+            const cmd = args[0].toLowerCase();
+            system.run(() => handleCommand(sender, cmd, args));
             return;
         }
-    }
-    lastChatTime.set(sender.id, now);
 
-    // 2. COMMAND SYSTEM (using ".")
-    if (message.startsWith(".")) {
-        event.cancel = true; 
-        const args = message.slice(1).split(" ");
-        const command = args[0].toLowerCase();
+        // 3. Chat Formatting
+        event.cancel = true;
+        let prefix = "§7[Member]§r ";
+        let nameColor = sender.hasTag("on_duty") ? "§a" : "§f";
+
+        if (sender.hasTag("rank:admin")) prefix = "§4[Admin]§r ";
+        else if (sender.hasTag("rank:mod")) prefix = "§b[Mod]§r ";
 
         system.run(() => {
-            handleCommand(sender, command, args);
+            world.sendMessage(`${prefix}${nameColor}${sender.name}§r: ${message}`);
         });
-        return;
-    }
-
-    // 3. CHAT RANKS & COLORS
-    event.cancel = true; 
-    let prefix = "§7[Member]§r ";
-    let nameColor = "§f"; 
-
-    if (sender.hasTag("rank:admin")) prefix = "§4[Admin]§r ";
-    else if (sender.hasTag("rank:mod")) prefix = "§b[Mod]§r ";
-
-    if (sender.hasTag("on_duty")) nameColor = "§a"; 
-
-    // Broadcast the formatted message
-    system.run(() => {
-        world.sendMessage(`${prefix}${nameColor}${sender.name}§r: ${message}`);
     });
-});
+}
 
 function handleCommand(player, cmd, args) {
     const isAdmin = player.hasTag("rank:admin");
     const isMod = player.hasTag("rank:mod");
-    const isStaff = isAdmin || isMod;
 
-    if (cmd === "duty" && isStaff) {
+    if (cmd === "duty" && (isAdmin || isMod)) {
         if (player.hasTag("on_duty")) {
             player.removeTag("on_duty");
-            player.nameTag = player.name; 
-            player.sendMessage("§cShift ended.");
+            player.nameTag = player.name;
+            player.sendMessage("§cShift Ended.");
         } else {
             player.addTag("on_duty");
-            player.nameTag = `§a${player.name}`; 
-            player.sendMessage("§aShift started!");
+            player.nameTag = `§a${player.name}`;
+            player.sendMessage("§aShift Started!");
         }
     }
-
+    
     if (cmd === "gm" && isAdmin) {
         const mode = args[1] === "1" ? "creative" : "survival";
         player.runCommandAsync(`gamemode ${mode}`);
     }
 
-    if (cmd === "kick" && isAdmin) {
+    if (cmd === "punish" && (isAdmin || isMod)) {
         const target = args[1];
+        const type = args[2]; // e.g. .punish PlayerName ban
         if (target) {
-            player.runCommandAsync(`kick "${target}"`);
+            player.runCommandAsync(`kick "${target}" Punished by staff.`);
         }
     }
 }
