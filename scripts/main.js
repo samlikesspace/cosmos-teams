@@ -19,6 +19,22 @@ function saveSettings(obj) {
     world.setDynamicProperty("mod_settings", JSON.stringify(obj));
 }
 
+function formatItem(player, item, slotName = "") {
+    let name = item.nameTag ? item.nameTag : item.typeId.split(":")[1].replace(/_/g, " ");
+    let msg = `§bx${item.amount} §f${name} §7(${item.typeId})${slotName ? ` [§e${slotName}§7]` : ""}`;
+    
+    const enchants = item.getComponent("enchantable");
+    if (enchants) {
+        const list = enchants.getEnchantments();
+        if (list.length > 0) {
+            // FIXED: Specifically accessing .type.id to prevent 'undefined'
+            const enchString = list.map(e => `§d${e.type.id.split(":")[1]}${e.level}`).join(" ");
+            msg += ` ${enchString}`;
+        }
+    }
+    player.sendMessage(msg);
+}
+
 world.afterEvents.playerSpawn.subscribe((ev) => {
     const { player, initialSpawn } = ev;
     if (!initialSpawn) return;
@@ -134,7 +150,7 @@ function handleCommand(player, args) {
                 const slots = ["Head", "Chest", "Legs", "Feet", "Offhand"];
                 slots.forEach(slot => {
                     const item = equipComp.getEquipment(slot);
-                    if (item) formatItem(player, item, slot.toUpperCase());
+                    if (item) formatItem(player, item, slot);
                 });
             }
             break;
@@ -203,18 +219,4 @@ function handleCommand(player, args) {
             player.sendMessage("§b--- Settings ---\n" + Object.entries(sets).map(([key, val]) => `§b${key}: ${val ? "§aON" : "§cOFF"}`).join("\n"));
             break;
     }
-}
-
-function formatItem(player, item, slotName = "") {
-    let name = item.nameTag ? item.nameTag : item.typeId.split(":")[1].replace(/_/g, " ");
-    let msg = `§bx${item.amount} §f${name} §7(${item.typeId})${slotName ? ` [§e${slotName}§7]` : ""}`;
-    const enchants = item.getComponent("enchantable");
-    if (enchants) {
-        const list = enchants.getEnchantments();
-        if (list.length > 0) {
-            // Using e.type.id (or e.typeId depending on build) to avoid undefined
-            msg += " §d" + list.map(e => `${(e.type?.id || e.typeId).split(":")[1]}${e.level}`).join(" ");
-        }
-    }
-    player.sendMessage(msg);
 }
