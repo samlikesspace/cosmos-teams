@@ -119,7 +119,7 @@ function handleCommand(player, args) {
             const invT = findTarget(args[1]);
             if (!invT) return player.sendMessage("§cPlayer not found.");
             const inv = invT.getComponent("inventory").container;
-            player.sendMessage(`§b- - - ${invT.name}'s Inventory - - -`);
+            player.sendMessage(`§b--- ${invT.name}'s Inventory ---`);
             for (let i = 0; i < inv.size; i++) {
                 const item = inv.getItem(i);
                 if (item) {
