@@ -20,7 +20,7 @@
     "dependencies": [
         {
             "module_name": "@minecraft/server",
-            "version": "1.11.0"
+            "version": "2.5.0-beta"
         }
     ]
 }
