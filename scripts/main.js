@@ -118,23 +118,25 @@ function handleCommand(player, args) {
         case "invsee":
             const invT = findTarget(args[1]);
             if (!invT) return player.sendMessage("§cPlayer not found.");
-            const inv = invT.getComponent("inventory").container;
-            player.sendMessage(`§b--- ${invT.name}'s Inventory ---`);
-            for (let i = 0; i < inv.size; i++) {
-                const item = inv.getItem(i);
-                if (item) {
-                    let displayName = item.nameTag ? item.nameTag : item.typeId.split(":")[1].replace(/_/g, " ");
-                    let msg = `§bx${item.amount} §f${displayName} §7(${item.typeId})`;
-                    const enchants = item.getComponent("enchantable");
-                    if (enchants) {
-                        const enchList = enchants.getEnchantments();
-                        if (enchList.length > 0) {
-                            msg += " §d" + enchList.map(e => `${e.type.id.split(":")[1]}${e.level}`).join(" ");
-                        }
-                    }
-                    player.sendMessage(msg);
-                }
+            player.sendMessage(`§b- - - ${invT.name}'s Inventory - - -`);
+            
+            const containers = [
+                { name: "Inv", cont: invT.getComponent("inventory").container },
+                { name: "Armor", cont: invT.getComponent("equippable") }
+            ];
+
+            // MAIN INV
+            for (let i = 0; i < containers[0].cont.size; i++) {
+                const item = containers[0].cont.getItem(i);
+                if (item) formatItem(player, item);
             }
+            // ARMOR + OFFHAND
+            const equip = containers[1].cont;
+            const slots = ["Head", "Chest", "Legs", "Feet", "Offhand"];
+            slots.forEach(slot => {
+                const item = equip.getEquipment(slot);
+                if (item) formatItem(player, item, slot);
+            });
             break;
 
         case "punish":
@@ -145,7 +147,7 @@ function handleCommand(player, args) {
             if (!pTarget || !["warn", "kick", "ban", "mute", "shadowmute", "tempban"].includes(pType)) return player.sendMessage("§cUsage: .punish [name] [type] [reason]");
             
             let h = pTarget.getDynamicProperty("history") || "";
-            if (h === "CLEAN") h = "";
+            if (h.trim() === "CLEAN") h = "";
             pTarget.setDynamicProperty("history", h + `${pType.toUpperCase()} - ${reason}\n`);
             
             if (pType === "warn") {
@@ -201,4 +203,17 @@ function handleCommand(player, args) {
             player.sendMessage("§b--- Settings ---\n" + Object.entries(sets).map(([key, val]) => `§b${key}: ${val ? "§aON" : "§cOFF"}`).join("\n"));
             break;
     }
+}
+
+function formatItem(player, item, slotName = "") {
+    let name = item.nameTag ? item.nameTag : item.typeId.split(":")[1].replace(/_/g, " ");
+    let msg = `§bx${item.amount} §f${name} §7(${item.typeId})${slotName ? ` [§e${slotName}§7]` : ""}`;
+    const enchants = item.getComponent("enchantable");
+    if (enchants) {
+        const list = enchants.getEnchantments();
+        if (list.length > 0) {
+            msg += " §d" + list.map(e => `${e.type.id.split(":")[1]}${e.level}`).join(" ");
+        }
+    }
+    player.sendMessage(msg);
 }
