@@ -1,8 +1,8 @@
 {
     "format_version": 2,
     "header": {
-        "name": "Staff & Chat Ranks",
-        "description": "Moderation tools with . commands",
+        "name": "§sCosmos Teams§r",
+        "description": "§l§sCosmos Teams§r is a mod that lets users make teams.\n§oFeatures include team homes, team chat, and more!",
         "uuid": "56d78a12-e34b-4c12-a891-fb8231c54321",
         "version": [1, 0, 0],
         "min_engine_version": [1, 20, 0]
