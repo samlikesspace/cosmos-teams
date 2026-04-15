@@ -205,7 +205,7 @@ world.beforeEvents.chatSend.subscribe((data) => {
 
             case "disband":
                 if (!team || team.owner !== sender.name) return sender.sendMessage("§c§l-§r§f You must be the owner of the team.");
-                if (args[2] !== "confirm") return sender.sendMessage("§6§l!§r§fAre you sure? Type '.team disband confirm' to delete your team! §l§6This action is irreversible!");
+                if (args[2] !== "confirm") return sender.sendMessage("§6§l!§r§f Are you sure? Type '.team disband confirm' to delete your team! §l§6This action is irreversible!");
                 delete teams[myTeamName];
                 saveTeams(teams);
                 sender.sendMessage("§a§l+§r§f Team disbanded.");
