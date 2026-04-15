@@ -18,23 +18,23 @@ function findMemberInTeam(team, inputName) {
 
 function sendFullHelp(player) {
     player.sendMessage("§l§s--- Cosmos Teams Command List ---");
-    player.sendMessage("§s.team §7- Show this list");
-    player.sendMessage("§s.team list §7- View all teams and members");
+    player.sendMessage("§s.team §7- Shows the list of commands!");
+    player.sendMessage("§s.team list §7- View all teams and its members");
     player.sendMessage("§s.team create {name} §7- Start your own team");
     player.sendMessage("§s.team request {team} §7- Request to join a team");
     player.sendMessage("§o§7You may only be apart of 1 team at a time.");
-    player.sendMessage("§s.team leave §7- Exit your current team");
-    player.sendMessage("§s.team disband §7- Delete team (Owner only)");
+    player.sendMessage("§s.team leave §7- Leave your current team");
+    player.sendMessage("§s.team disband §7- Delete your team §7[§sOwner+§7]");
     player.sendMessage("§s.team tp {user} §7- Teleport to teammate");
-    player.sendMessage("§s.team kick {user} §7- Remove member (Manager+)");
-    player.sendMessage("§s.team manager {user} §7- Promote to Manager (Owner only)");
-    player.sendMessage("§s.team transfer {user} §7- Change Owner (Owner only)");
-    player.sendMessage("§s.team invites §7- List pending requests");
-    player.sendMessage("§s.team accept/decline {user} §7- Manage requests");
-    player.sendMessage("§s.team home §7- TP to team home");
-    player.sendMessage("§s.team home set §7- Set home at current spot (Owner)");
+    player.sendMessage("§s.team kick {user} §7- Remove a team member §7[§sManager+§7]");
+    player.sendMessage("§s.team manager {user} §7- Promote a member to Manager §7[§sOwner+§7]");
+    player.sendMessage("§s.team transfer {user} §7- Change the Owner of the team §7[§sOwner+§7]");
+    player.sendMessage("§s.team invites §7- List pending requests to the team §7[§sManager+§7]");
+    player.sendMessage("§s.team accept/decline {user} §7- Manage join requests §7[§sManager+§7]");
+    player.sendMessage("§s.team home §7- Teleport to the team home");
+    player.sendMessage("§s.team home set §7- Set home at current spot §7[§sOwner+§7]");
     player.sendMessage("§s.team chat §7- Toggle private team chat");
-    player.sendMessage("§o§7v1.1 §r- §7§o@samlovesspace production");
+    player.sendMessage("§o§7v1.1 §r- samlikesspace.dev");
 }
 
 // --- Join Notification ---
