@@ -17,31 +17,28 @@ function findMemberInTeam(team, inputName) {
 }
 
 function sendFullHelp(player) {
-    player.sendMessage("§l§b--- Cosmos Teams: Full Command List ---");
-    player.sendMessage("§e.team §7- Show this list (Note: You can only be in 1 team)");
-    player.sendMessage("§e.team list §7- View all teams and members");
-    player.sendMessage("§e.team create {name} §7- Start your own team");
-    player.sendMessage("§e.team request {team} §7- Request to join a team");
-    player.sendMessage("§e.team leave §7- Exit your current team");
-    player.sendMessage("§e.team disband §7- Delete team (Owner only)");
-    player.sendMessage("§b-- Management --");
-    player.sendMessage("§e.team tp {user} §7- Teleport to teammate");
-    player.sendMessage("§e.team kick {user} §7- Remove member (Manager+)");
-    player.sendMessage("§e.team manager {user} §7- Promote to Manager (Owner only)");
-    player.sendMessage("§e.team transfer {user} §7- Change Owner (Owner only)");
-    player.sendMessage("§e.team invites §7- List pending requests");
-    player.sendMessage("§e.team accept/decline {user} §7- Manage requests");
-    player.sendMessage("§b-- Extra --");
-    player.sendMessage("§e.team home §7- TP to team home");
-    player.sendMessage("§e.team home set §7- Set home at current spot (Owner)");
-    player.sendMessage("§e.team chat §7- Toggle private team chat");
-    player.sendMessage("§e.team settings §7- Toggle team features (Owner)");
+    player.sendMessage("§l§s--- Cosmos Teams Command List ---");
+    player.sendMessage("§s.team §7- Show this list (Note: You can only be in 1 team)");
+    player.sendMessage("§s.team list §7- View all teams and members");
+    player.sendMessage("§s.team create {name} §7- Start your own team");
+    player.sendMessage("§s.team request {team} §7- Request to join a team");
+    player.sendMessage("§s.team leave §7- Exit your current team");
+    player.sendMessage("§s.team disband §7- Delete team (Owner only)");
+    player.sendMessage("§s.team tp {user} §7- Teleport to teammate");
+    player.sendMessage("§s.team kick {user} §7- Remove member (Manager+)");
+    player.sendMessage("§s.team manager {user} §7- Promote to Manager (Owner only)");
+    player.sendMessage("§s.team transfer {user} §7- Change Owner (Owner only)");
+    player.sendMessage("§s.team invites §7- List pending requests");
+    player.sendMessage("§s.team accept/decline {user} §7- Manage requests");
+    player.sendMessage("§s.team home §7- TP to team home");
+    player.sendMessage("§s.team home set §7- Set home at current spot (Owner)");
+    player.sendMessage("§s.team chat §7- Toggle private team chat");
 }
 
 // --- Join Notification ---
 world.afterEvents.playerSpawn.subscribe((ev) => {
     if (ev.initialSpawn) {
-        ev.player.sendMessage("§b[Cosmos] §fNever used Cosmos Teams before? Type §e'.team'§f in chat!");
+        ev.player.sendMessage("§7[§s§lCOSMOS TEAMS§r§7] §fNever used Cosmos Teams before? Type §s'.team'§f in chat!");
     }
 });
 
