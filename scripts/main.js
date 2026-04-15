@@ -108,7 +108,8 @@ world.beforeEvents.chatSend.subscribe((data) => {
 
             case "invites":
                 if (!team || !team.managers.includes(sender.name)) return sender.sendMessage("§cManager only.");
-                sender.sendMessage(`§l§s--- Pending Requests --- §r§fn\${team.requests.join(", ") || "None"}`);
+                sender.sendMessage(`§l§s--- Pending Requests ---);
+                sender.sendMessage(`${team.requests.join("§s,§f ") || "None"}`);
                 break;
 
             case "accept":
